@@ -9,12 +9,21 @@ namespace CarPark.Model
     public class Ticket
     {
         public DateTime DateIn { get; set; }
-        public DateTime DateOut { get; set; }
-        public decimal ParkingFee {
+        public DateTime? DateOut { get; set; }
+        public decimal? ParkingFee {
 
             get
             {
-                TimeSpan ts = DateOut - DateIn;
+
+                if (DateOut == null)
+                    return null;
+
+                if (DateOut < DateIn)
+                {
+                    throw new Exception("Invalid date");
+                }
+
+                TimeSpan ts = DateOut.Value - DateIn;
                 ts = ts.Add(TimeSpan.FromMinutes(-15));
                 if (ts.TotalMinutes <= 0)
                     return 0m;
